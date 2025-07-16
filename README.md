@@ -4,9 +4,24 @@ Una aplicación desktop desarrollada en Python usando Flet que simula ventas aut
 
 ---
 
-## 🚀 Características
+## 🚀 Ca## 🛠️ Desarrollo y Extensión
 
-* **Simulación automática de ventas** cada X segundos configurable
+### Estructura de Módulos
+
+- **`src/core/`**: Lógica de negocio pura, independiente de la UI
+- **`src/gui/`**: Interfaz de usuario con Flet, componentes y vistas
+- **`src/infrastructure/`**: Servicios transversales (config, logging)
+- **`src/events/`**: Sistema de comunicación entre componentes
+
+### Cómo Agregar Nueva Funcionalidad
+
+1. **Lógica de negocio**: Añadir en `src/core/`
+2. **Vista**: Crear en `src/gui/views/`
+3. **Navegación**: Actualizar `main.py` y navigation rail
+4. **Eventos**: Usar `EventDispatcher` para comunicación
+5. **Configuración**: Añadir variables en `infrastructure/config.py`
+
+--- **Simulación automática de ventas** cada X segundos configurable
 * **Monitor en tiempo real** con historial de ventas recientes
 * **Dashboard de estadísticas** con balance total y promedios
 * **Arquitectura modular desacoplada** con separación core/gui/infrastructure
@@ -19,42 +34,218 @@ Una aplicación desktop desarrollada en Python usando Flet que simula ventas aut
 
 ## 🧱 Estructura del Proyecto
 
+### Estructura de Archivos
 ```
 personal-expendio-2/
-├── README.md
-├── requirements.txt
+├── README.md                                    # Documentación del proyecto
+├── requirements.txt                             # Dependencias de Python
 ├── logs/
-│   └── expendio.log         # Logs de la aplicación
-├── src/
-│   ├── main.py              # Punto de entrada principal
-│   ├── core/                # Lógica de negocio central
-│   │   ├── __init__.py
-│   │   ├── config.py        # Configuración legacy (migrado a infrastructure)
-│   │   ├── data_store.py    # Almacén de datos de ventas
-│   │   ├── logger.py        # Logger legacy (migrado a infrastructure)
-│   │   └── updater.py       # Simulador de ventas automáticas
-│   ├── events/              # Sistema de eventos
-│   │   ├── __init__.py
-│   │   └── dispatcher.py    # Dispatcher pub/sub para eventos
-│   ├── gui/                 # Interfaz de usuario
-│   │   ├── __init__.py
-│   │   ├── bindings.py      # Vinculación datos-UI y sincronización
-│   │   ├── views.py         # Importaciones de vistas
-│   │   ├── components/      # Componentes reutilizables
-│   │   │   ├── __init__.py
-│   │   │   └── app_bar.py   # Barra de aplicación superior
-│   │   └── views/           # Vistas principales
-│   │       ├── __init__.py
-│   │       ├── balance_view.py  # Vista de resumen/estadísticas
-│   │       └── sales_view.py    # Vista de monitor de ventas
-│   ├── infrastructure/      # Infraestructura y servicios
-│   │   ├── __init__.py
-│   │   ├── config.py        # Sistema de configuración centralizado
-│   │   └── logger.py        # Sistema de logging avanzado
-│   └── storage/             # Almacenamiento
-│       ├── data/            # Datos persistentes
-│       └── temp/            # Archivos temporales
+│   └── expendio.log                            # Logs de la aplicación (generado)
+├── src/                                        # Código fuente principal
+│   ├── main.py                                 # Punto de entrada y aplicación principal
+│   │
+│   ├── core/                                   # 🏗️ Lógica de negocio central
+│   │   ├── __init__.py                         # Exportaciones del módulo core
+│   │   ├── config.py                           # Configuración legacy (deprecado)
+│   │   ├── data_store.py                       # Almacén en memoria del historial de ventas
+│   │   ├── logger.py                           # Logger legacy (deprecado)
+│   │   └── updater.py                          # Generador de ventas automáticas
+│   │
+│   ├── events/                                 # 📡 Sistema de comunicación
+│   │   ├── __init__.py                         # Exportaciones del módulo events
+│   │   └── dispatcher.py                       # Publisher/Subscriber para eventos
+│   │
+│   ├── gui/                                    # 🎨 Interfaz de usuario (Flet)
+│   │   ├── __init__.py                         # Exportaciones del módulo gui
+│   │   ├── bindings.py                         # Vinculación reactiva datos ↔ UI
+│   │   ├── views.py                            # Importaciones centralizadas de vistas
+│   │   │
+│   │   ├── components/                         # Componentes reutilizables
+│   │   │   ├── __init__.py                     # Exportaciones de componentes
+│   │   │   └── app_bar.py                      # Barra superior con estadísticas
+│   │   │
+│   │   └── views/                              # Vistas principales de la app
+│   │       ├── __init__.py                     # Exportaciones de vistas
+│   │       ├── balance_view.py                 # Vista de resumen y estadísticas
+│   │       └── sales_view.py                   # Vista de monitor en tiempo real
+│   │
+│   ├── infrastructure/                         # ⚙️ Servicios transversales
+│   │   ├── __init__.py                         # Exportaciones de infraestructura
+│   │   ├── config.py                           # Sistema de configuración por variables ENV
+│   │   └── logger.py                           # Logger avanzado con rotación de archivos
+│   │
+│   └── storage/                                # 💾 Directorios de almacenamiento
+│       ├── data/                               # Datos persistentes (vacío por defecto)
+│       └── temp/                               # Archivos temporales (vacío por defecto)
 ```
+
+### Archivos Python por Módulo
+```bash
+# Listado real de archivos del proyecto
+./src/main.py                                   # 🚀 Aplicación principal Flet
+./src/core/__init__.py                          # Exportaciones: updater, data_store, logger
+./src/core/config.py                            # ⚠️ Configuración legacy 
+./src/core/data_store.py                        # 📊 Historial de ventas en memoria
+./src/core/logger.py                            # ⚠️ Logger legacy
+./src/core/updater.py                           # 🔄 Simulador automático de ventas
+./src/events/__init__.py                        # Exportaciones: dispatcher
+./src/events/dispatcher.py                      # 📡 Pub/Sub para eventos de la app
+./src/gui/__init__.py                           # Exportaciones: views, bindings, components
+./src/gui/bindings.py                           # 🔗 Vinculación reactiva UI ↔ datos
+./src/gui/views.py                              # Importaciones centralizadas
+./src/gui/components/__init__.py                # Exportaciones: AppBar
+./src/gui/components/app_bar.py                 # 📊 Barra superior con contadores
+./src/gui/views/__init__.py                     # Exportaciones: SalesView, BalanceView
+./src/gui/views/balance_view.py                 # 📈 Vista de estadísticas y resumen
+./src/gui/views/sales_view.py                   # 💰 Monitor de ventas en tiempo real
+./src/infrastructure/__init__.py                # Exportaciones: config, logger
+./src/infrastructure/config.py                 # ⚙️ Configuración centralizada (ENV)
+./src/infrastructure/logger.py                 # 📝 Sistema de logging profesional
+```
+
+---
+
+## 🏗️ Diagrama de Arquitectura
+
+### Vista de Alto Nivel: Flujo de Datos y Comunicación
+
+```
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│                          🎨 CAPA DE PRESENTACIÓN (GUI)                          │
+├─────────────────────────────────────────────────────────────────────────────────┤
+│  ┌──────────────┐    ┌─────────────────┐    ┌─────────────────┐                │
+│  │   AppBar     │    │   SalesView     │    │  BalanceView    │                │
+│  │ (Contador)   │    │ (Monitor RT)    │    │ (Estadísticas)  │                │
+│  └──────────────┘    └─────────────────┘    └─────────────────┘                │
+│           │                    │                       │                        │
+│           └────────────────────┼───────────────────────┘                        │
+│                                │                                                │
+│  ┌─────────────────────────────┼─────────────────────────────────────────────┐  │
+│  │             📡 bindings.py (Vinculación Reactiva)                        │  │
+│  │                             │                                            │  │
+│  │  • bind_sales_to_view()     │     • initialize_view_data()              │  │
+│  │  • bind_multiple_views()    │     • on_new_sale() callbacks             │  │
+│  └─────────────────────────────┼─────────────────────────────────────────────┘  │
+└─────────────────────────────────┼─────────────────────────────────────────────────┘
+                                  │
+                    ┌─────────────┴─────────────┐
+                    │ 📡 EVENT DISPATCHER      │
+                    │ (Publisher/Subscriber)    │
+                    │                          │
+                    │ events/dispatcher.py     │
+                    │ • subscribe()            │
+                    │ • dispatch()             │
+                    │ • unsubscribe()          │
+                    └─────────────┬─────────────┘
+                                  │
+┌─────────────────────────────────┼─────────────────────────────────────────────────┐
+│                       🏗️ CAPA DE LÓGICA DE NEGOCIO (CORE)                       │
+├─────────────────────────────────┼─────────────────────────────────────────────────┤
+│                                 │                                                │
+│  ┌─────────────────┐           │           ┌─────────────────┐                  │
+│  │   updater.py    │───────────┼──────────▶│  data_store.py  │                  │
+│  │                 │           │           │                 │                  │
+│  │ • start_simulation()        │           │ • add_sale()    │                  │
+│  │ • genera ventas auto        │           │ • get_sales()   │                  │
+│  │ • cada N segundos           │           │ • clear_sales() │                  │
+│  │ • dispatch("SALE_ADDED")    │           │ • sales_history │                  │
+│  └─────────────────┘           │           └─────────────────┘                  │
+│           │                    │                      │                          │
+│           │                    │                      │                          │
+│  ┌─────────────────────────────┼──────────────────────┼─────────────────────┐    │
+│  │                             │                      │                     │    │
+│  │                           EMITE EVENTO             │                     │    │
+│  │                             │                      │                     │    │
+│  │                             ▼                      │                     │    │
+│  │                   "SALE_ADDED"                     │                     │    │
+│  │                             │                      │                     │    │
+│  │                             │                      ▼                     │    │
+│  │                             │              🗄️ HISTORIAL EN MEMORIA        │    │
+│  │                             │                sales_history[]            │    │
+│  └─────────────────────────────┼─────────────────────────────────────────────┘    │
+└─────────────────────────────────┼─────────────────────────────────────────────────┘
+                                  │
+┌─────────────────────────────────┼─────────────────────────────────────────────────┐
+│                     ⚙️ CAPA DE INFRAESTRUCTURA (SERVICES)                       │
+├─────────────────────────────────┼─────────────────────────────────────────────────┤
+│                                 │                                                │
+│  ┌─────────────────┐           │           ┌─────────────────┐                  │
+│  │    config.py    │           │           │    logger.py    │                  │
+│  │                 │           │           │                 │                  │
+│  │ • Config class  │           │           │ • setup_logger()│                  │
+│  │ • Variables ENV │           │           │ • log_sale()    │                  │
+│  │ • LOG_LEVEL     │           │           │ • rotación      │                  │
+│  │ • SIM_INTERVAL  │           │           │ • archivo + console │              │
+│  │ • MAX_HISTORY   │           │           │                 │                  │
+│  └─────────────────┘           │           └─────────────────┘                  │
+└─────────────────────────────────┼─────────────────────────────────────────────────┘
+                                  │
+                         ┌────────┴────────┐
+                         │ 🚀 main.py      │
+                         │                 │
+                         │ • MainApp       │
+                         │ • Navigation    │
+                         │ • Flet setup    │
+                         │ • Event loop    │
+                         └─────────────────┘
+```
+
+### Flujo de Ejecución Detallado
+
+```
+🔄 SIMULACIÓN DE VENTAS:
+┌─────────────────────────────────────────────────────────────────┐
+│ 1. updater.start_simulation()                                  │
+│    ├─ Genera venta aleatoria cada N segundos                   │
+│    ├─ data_store.add_sale(sale)                               │
+│    ├─ logger.log_sale(sale)                                   │
+│    └─ dispatcher.dispatch("SALE_ADDED", sale) ────┐           │
+└─────────────────────────────────────────────────────┼───────────┘
+                                                      │
+📡 PROPAGACIÓN DE EVENTOS:                             │
+┌─────────────────────────────────────────────────────┼───────────┐
+│ 2. dispatcher.dispatch("SALE_ADDED", sale)         │           │
+│    └─ Llama a todos los callbacks suscritos ────────┼───────────┤
+└─────────────────────────────────────────────────────┼───────────┘
+                                                      │
+🔗 ACTUALIZACIÓN REACTIVA:                             │
+┌─────────────────────────────────────────────────────┼───────────┐
+│ 3. bindings.on_new_sale(sale_data) ◄───────────────┘           │
+│    ├─ current_sales = data_store.get_sales()                   │
+│    ├─ view.update_sales(current_sales)                         │
+│    └─ view.update_counters(total_sales, total_amount)          │
+└─────────────────────────────────────────────────────────────────┘
+                                    │
+🎨 ACTUALIZACIÓN DE UI:              │
+┌─────────────────────────────────────┼───────────────────────────┐
+│ 4. Vistas se actualizan            │                           │
+│    ├─ SalesView.update_sales() ◄───┼─ Lista de ventas         │
+│    ├─ BalanceView.update_sales() ◄─┼─ Estadísticas            │
+│    └─ AppBar.update_counters() ◄───┘─ Contadores globales     │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Patrones Arquitectónicos Implementados
+
+1. **🏛️ Clean Architecture (Hexagonal)**
+   - **Core**: Lógica de negocio pura (data_store, updater)
+   - **GUI**: Adaptadores de UI (views, components, bindings) 
+   - **Infrastructure**: Servicios externos (config, logger)
+
+2. **📡 Publisher-Subscriber Pattern**
+   - **Publisher**: `updater.py` emite eventos "SALE_ADDED"
+   - **Subscribers**: Vistas suscritas vía `bindings.py`
+   - **Event Bus**: `dispatcher.py` centraliza la comunicación
+
+3. **🔗 Data Binding Reactivo**
+   - **Unidireccional**: Datos fluyen de Core → GUI
+   - **Automático**: Cambios en datos actualizan UI sin intervención manual
+   - **Desacoplado**: UI no conoce directamente el modelo de datos
+
+4. **🏭 Dependency Injection**
+   - **Config**: Variables de entorno inyectadas vía `infrastructure/config.py`
+   - **Logger**: Servicio inyectado en todos los módulos
+   - **Loose Coupling**: Módulos no dependen de implementaciones concretas
 
 ---
 
