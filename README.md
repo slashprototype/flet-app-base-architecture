@@ -46,9 +46,7 @@ personal-expendio-2/
 │   │
 │   ├── core/                                   # 🏗️ Lógica de negocio central
 │   │   ├── __init__.py                         # Exportaciones del módulo core
-│   │   ├── config.py                           # Configuración legacy (deprecado)
 │   │   ├── data_store.py                       # Almacén en memoria del historial de ventas
-│   │   ├── logger.py                           # Logger legacy (deprecado)
 │   │   └── updater.py                          # Generador de ventas automáticas
 │   │
 │   ├── events/                                 # 📡 Sistema de comunicación
